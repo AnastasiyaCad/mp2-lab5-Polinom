@@ -11,12 +11,13 @@ void TPolinom::ToMonom()
 {
 	int c = 0;
 	string tmp;
-	Monom m = {};
+	//Monom m = {};
+	Monom m;
 	TList<Monom>::iterator it;
 	bool sing = true;
-	int degree;
 	for (int i = 0; i < startpolinom.size(); i++)
 	{
+		m = {};
 		if (IsOperation(startpolinom[i]))
 		{
 			if (startpolinom[i] == '+')
@@ -70,11 +71,12 @@ void TPolinom::ToMonom()
 					i++;
 				}
 				}
-				i--;
-				degree = x + y + z;
-				m.name = startpolinom.substr(c, i - c + 1);
-				m.degree = degree;
 			}
+			i--;
+			degree = x + y + z;
+			m.name = startpolinom.substr(c, i - c + 1);
+			m.degree = degree;
+
 		}
 		if (Polinom.Empty())
 		{
@@ -101,6 +103,7 @@ void TPolinom::ToMonom()
 			Polinom.Push(m);
 		}
 	}
+}
 
 	/*while (c != startpolinom.size())
 	{
@@ -156,14 +159,13 @@ void TPolinom::ToMonom()
 					degree += st;
 				}
 				}
-			}
+			}*/
 		/*	Monom m;
 			m.coef = atof(tmp.c_str());
 			m.degree = degree;
 			Polinom.Push(m);*/
 			//запихиваем в моном степень и коэффициент
 
-}
 
 int TPolinom::DegreePr(char op)
 {
