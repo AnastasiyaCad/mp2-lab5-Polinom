@@ -36,6 +36,51 @@ class TList
 
 
 public: 
+	class iterator
+	{
+	private:
+		link<T> *pointer;
+	public:
+		iterator()
+		{
+			pointer = new link<T>;
+		}
+		iterator(const iterator &it)
+		{
+			pointer = it.pointer;
+		}
+		iterator& operator=(const iterator &tmp)
+		{
+			pointer = tmp.pointer;
+			return *this;
+		}
+		link<T>* operator->() const
+		{
+			return pointer;
+		}
+		bool operator == (const iterator &it) const
+		{
+			if (pointer == it.pointer)
+				return true;
+			else return false;
+		}
+		bool operator != (const iterator &it) const
+		{
+			return !(*this == it);
+		}
+		T operator*()const
+		{
+			if (pointer == nullptr)
+				throw("nullptr");
+			return pointer->data;
+		}
+		iterator& operator ++()
+		{
+			this->pointer = this->pointer->pNext;
+			return *this;
+		}
+		friend class TList;
+	};
 	TList(){
 		pFirst = nullptr;
 		pCurrLink = nullptr;
@@ -59,15 +104,16 @@ public:
 
 	~TList()
 	{
-		link *p = pFirst;
+	/*	link *p = pFirst;
 		while (p != nullptr)
 		{
 			pFirst = p->pNext;
 			delete p;
 			p = pFirst;
-		}
+		}*/
+		Clear();
 	}
-	TList<t>& operator = (const TList<T> & l)
+	TList<T>& operator = (const TList<T> & l)
 	{
 		link<T>*count = l.pFirst;
 		if (!this->Empty())
@@ -78,6 +124,29 @@ public:
 			count = count->pNext;
 		}
 		return *this;
+	}
+
+	bool operator==(const TList &lst)const
+	{
+		if (this->ListLen != lst.ListLen)
+			return false;
+		else
+		{
+			link<T>*count*left = this->pFirst;
+			link<T>*count*right = lst.pFirst;
+			while (right != nullptr)
+			{
+				if (left->data != right->data)
+					return false;
+				left = left->pNext;
+				right = right->pNext;
+			}
+			return true;
+		}
+	}
+	bool operator!=(const TList &lst)const
+	{
+		return !(*this == lst);
 	}
 	
 	void Clear()
@@ -91,14 +160,6 @@ public:
 		return pFirst == nullptr;
 	}
 
-	/*bool IsFull()
-	{
-		true
-		{
-			link *p = new link;
-		}
-		//return pFirst == ;
-	}*/
 
 	T Pop()
 	{
@@ -116,41 +177,95 @@ public:
 	{
 		if (Empty())
 		{
-			link *p = new link;
-			p->data = d;
-			p->pNext = pFirst;
-			pFirst = p;
+			pFirst = new link<T>(d);
 			pCurrLink = pFirst;
 			ListLen++;
+			
 		}
 		else
 		{
 			if (ListLen == MAXSIZE)
 				throw "Error! Maxsize.";
-			pCurrLink->pNext = new link;
+			pCurrLink->pNext = new link<T>;
 			pCurrLink = pCurrLink->pNext;
 			ListLen++;
 		}
 	}
 
+
 	int GetSize()
 	{
 		return ListLen;
 	}
-	
 
-
-	/*void Push(T coef, int degree)
+	iterator Begin()
 	{
-		if (IsFull())
-			throw "ERROR";
-		link *p = new link;
-		p->data.coef = coef;
-		p->data.degree = degree;
-		p->pNext = pFirst;
-		pFirst = p;
-	}*/
-
-	//void 
+		iterator it;
+		it.pointer = pFirst;
+		return it;
+	}
+	iterator End()
+	{
+		iterator it;
+		if (Empty())
+		{
+			it.pointer = pFirst;
+			return it;
+		}
+		it.pointer = pCurrLink->pNext;
+		return it;
+	}
+	void Insert(iterator it, T val)
+	{
+		link<T> *count = pFirst;
+		link <T> *prev;
+		link<T> *insert = new link<T>(val);
+		int pos = 0;
+		while (count != it.pointer)
+		{
+			prev = count;
+			count = count->pNext;
+			pos++;
+		}
+		if (pos == 0)
+		{
+			link<T> *tmp = pFirst;
+			insert->pNext = tmp;
+			pFirst = insert;
+			ListLen++;
+		}
+		else
+		{
+			insert->pNext = count;
+			prev->pNext = insert;
+			ListLen++;
+		}
+	}
+	void Erase(iterator it)
+	{
+		link<T> *count = pFirst;
+		link<T> *prev;
+		int pos = 0;
+		while (count != it.pointer)
+		{
+			prev = count;
+			count = count->pNext;
+			pos++;
+		}
+		if (pos == 0)
+		{
+			link<T> *tmp = pFirst;
+			pFirst = pFirst->pNext;
+			delete tmp;
+			ListLen--;
+		}
+		else
+		{
+			prev->pNext = count->pNext;
+			delete count;
+			ListLen--;
+		}
+	}
+	friend class iterator;
 };
 #endif

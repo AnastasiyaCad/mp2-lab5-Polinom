@@ -52,16 +52,22 @@ public:
 	TPolinom(string i = " ") { startpolinom = i; }
 	TPolinom(const TPolinom & pl);
 	string StartPolinom() { return startpolinom; }
-	void ToMonom(string startpolinom);
+	void ToMonom();
+	int Calculate(int _x, int _y, int _z);
 	bool Operand(char op);
 	bool XYZ(char op);
 	bool IsOperation(char elem);
 	float Coef(char elem);
 	void Space(string str);
-	void Split(string elem);
 	int DegreePr(char elem);
 	bool Proverka(string str);
-	void Same(TList<float> list);
+	TPolinom operator+(TPolinom & pl);
+	TPolinom operator-(TPolinom & pl);
+	TPolinom &operator=(const TPolinom & pl);
+	bool operator==(const TPolinom & pl)const;
+	friend ostream & operator<<(ostream & os, TPolinom & pl);
+	friend istream & operator>>(istream &is, TPolinom &pl);
+
 };
 
 #endif

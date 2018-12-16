@@ -18,7 +18,7 @@
     <ClCompile Include="test_main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="test_tqueue.cpp">
+    <ClCompile Include="test_TPolinom.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
