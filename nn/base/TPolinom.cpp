@@ -7,6 +7,13 @@ TPolinom::TPolinom(const TPolinom & pl)
 	this->Polinom = pl.Polinom;
 }
 
+int TPolinom::GetDegree(char p)
+{
+	if (int(p) > 49 && int(p) < 58)
+		return int(p - 48);
+	else return 1;
+}
+
 void TPolinom::ToMonom()
 {
 	int c = 0;
@@ -18,12 +25,23 @@ void TPolinom::ToMonom()
 	for (int i = 0; i < startpolinom.size(); i++)
 	{
 		m = {};
-		if (IsOperation(startpolinom[i]))
+		/*if (IsOperation(startpolinom[i]))
 		{
 			if (startpolinom[i] == '+')
 				sing = true;
 			else
 				sing = false;
+			i++;
+		}*/
+
+		if (startpolinom[i] == '+')
+		{
+			sing = true;
+			i++;
+		}
+		else if (startpolinom[i] == '-')
+		{
+			sing = false;
 			i++;
 		}
 		if (!IsOperation(startpolinom[i]) && !XYZ(startpolinom[i]))
@@ -41,30 +59,28 @@ void TPolinom::ToMonom()
 		c = i;
 		if (XYZ(startpolinom[i]))
 		{
-			int degree = 0;
+			int degree;
 			int x = 0, y = 0, z = 0;
 			while (!IsOperation(startpolinom[i]) && i != startpolinom.size())
 			{
 				switch (startpolinom[i]) {
-				case '1':
+				case 'x':
 				{
-					char s = startpolinom[i + 1];
-					x = 100 * (int)s;
+					x = GetDegree(startpolinom[i + 1]);
 					i++;
 					break;
 				}
-				case '2':
+				case 'y':
 				{
-					char s = startpolinom[i + 1];
-					y = 10 * (int)s;
+					y = GetDegree(startpolinom[i + 1]);
 					i++;
 					break;
 				}
-				case '3':
+				case 'z':
 				{
-					char s = startpolinom[i + 1];
+					z = GetDegree(startpolinom[i + 1]);
 					i++;
-					z = (int)s;
+					break;
 				}
 				default:
 				{
@@ -73,7 +89,7 @@ void TPolinom::ToMonom()
 				}
 			}
 			i--;
-			degree = x + y + z;
+			degree = x * 100 + y * 10 + z;
 			m.name = startpolinom.substr(c, i - c + 1);
 			m.degree = degree;
 
@@ -83,7 +99,7 @@ void TPolinom::ToMonom()
 			Polinom.Push(m);
 			continue;
 		}
-		for (it = Polinom.Begin(); it != Polinom.End(); ++it)
+		for (it = Polinom.Begin(); it != Polinom.End(); it++) // it
 		{
 			if (m.degree == it->data.degree)
 			{
@@ -94,7 +110,7 @@ void TPolinom::ToMonom()
 			}
 			if (m.degree > it->data.degree)
 			{
-				Polinom.Insert(it, m);
+				Polinom.Insert(it, m); // ins
 				break;
 			}
 		}
@@ -105,61 +121,61 @@ void TPolinom::ToMonom()
 	}
 }
 
-	/*while (c != startpolinom.size())
+/*while (c != startpolinom.size())
+{
+	if (IsOperation(startpolinom[c]))
 	{
-		if (IsOperation(startpolinom[c]))
-		{
-			if (startpolinom[c] == '-')
-				tmp += startpolinom[c];
-			else
-				if (c == 0)
-					throw "ERROR! Frist element is operation!";
-			c++;
-		}
-		while (!IsOperation(startpolinom[c]))
-		{
+		if (startpolinom[c] == '-')
 			tmp += startpolinom[c];
-			c++;
-		}
-		if (IsOperation(startpolinom[c]))
+		else
+			if (c == 0)
+				throw "ERROR! Frist element is operation!";
+		c++;
+	}
+	while (!IsOperation(startpolinom[c]))
+	{
+		tmp += startpolinom[c];
+		c++;
+	}
+	if (IsOperation(startpolinom[c]))
+	{
+		int a = 0;
+		string num;
+		tmp += ' ';
+		// проверка на стандарт
+		while (!XYZ(tmp[a]))
 		{
-			int a = 0;
-			string num;
-			tmp += ' ';
-			// проверка на стандарт
-			while (!XYZ(tmp[a]))
+			num += tmp[a];
+			a++;
+		}
+		degree = 0;
+		if (((XYZ(tmp[a - 1]) || (Operand(tmp[a - 1])) && ((XYZ(tmp[a]) && (XYZ(tmp[a + 1]) || tmp[a + 1] == ' '))))))
+		{
+			//a элементу ставим стпень 1
+		}
+		if ((XYZ(tmp[a - 1])) && (Operand(tmp[a])) && ((XYZ(tmp[a + 1])) || (IsOperation(tmp[a + 1]))))
+		{
+			int st = DegreePr(tmp[a - 1]);
+			switch (st) {
+			case '0': {
+				throw "ERROR! Operand don`t xyz!";
+				break; }
+			case '1':
 			{
-				num += tmp[a];
-				a++;
+				degree += 100 * st;
+				break;
 			}
-			degree = 0;
-			if (((XYZ(tmp[a - 1]) || (Operand(tmp[a - 1])) && ((XYZ(tmp[a]) && (XYZ(tmp[a + 1]) || tmp[a + 1] == ' '))))))
+			case '2':
 			{
-				//a элементу ставим стпень 1
+				degree += 10 * st;
+				break;
 			}
-			if ((XYZ(tmp[a - 1])) && (Operand(tmp[a])) && ((XYZ(tmp[a + 1])) || (IsOperation(tmp[a + 1]))))
+			case '3':
 			{
-				int st = DegreePr(tmp[a - 1]);
-				switch (st) {
-				case '0': {
-					throw "ERROR! Operand don`t xyz!";
-					break; }
-				case '1':
-				{
-					degree += 100 * st;
-					break;
-				}
-				case '2':
-				{
-					degree += 10 * st;
-					break;
-				}
-				case '3':
-				{
-					degree += st;
-				}
-				}
-			}*/
+				degree += st;
+			}
+			}
+		}*/
 		/*	Monom m;
 			m.coef = atof(tmp.c_str());
 			m.degree = degree;
@@ -178,37 +194,14 @@ int TPolinom::DegreePr(char op)
 	return 0;
 }
 
-void TPolinom::Space(string str) // удаление пробелов и добавление своего в конце
-{
-	string tmp;
-	for (int i = 0; i < str.size(); i++)
-		if (str[i] == ' ')
-			continue;
-	tmp += ' ';
-	startpolinom = tmp;
-}
-
-float TPolinom::Coef(char elem)
-{
-	string tmp;
-	int i = 0;
-	while (!XYZ(startpolinom[i]))
-	{
-		tmp += startpolinom[i];
-		i++;
-	}
-	float a = atof(tmp.c_str());
-	return a;
-}
-
 bool TPolinom::IsOperation(char elem)
 {
-	return ( elem == '+' || elem == '-' ) ? true : false;
+	return (elem == '+' || elem == '-') ? true : false;
 }
 
 bool TPolinom::XYZ(char op)
 {
-	if ((op == 'x') || (op == 'y') ||(op == 'z'))
+	if ((op == 'x') || (op == 'y') || (op == 'z'))
 		return true;
 	else
 		return false;
@@ -232,13 +225,13 @@ bool TPolinom::Proverka(string str)
 			throw "ERROR!!!";
 		}
 	}
-	
+
 }
 
 int TPolinom::Calculate(int _x, int _y, int _z)
 {
 	int res = 0;
-	for (auto it = Polinom.Begin(); it != Polinom.End(); ++it)
+	for (auto it = Polinom.Begin(); it != Polinom.End(); it++)
 	{
 		int x = it->data.degree / 100;
 		int y = (it->data.degree / 10) % 10;
@@ -351,6 +344,11 @@ bool TPolinom::operator==(const TPolinom & pl)const
 	if (this->startpolinom == pl.startpolinom)
 		return true;
 	else return false;
+}
+
+bool TPolinom::operator!=(const TPolinom & pl)const
+{
+	return !(this->startpolinom == pl.startpolinom);
 }
 ostream & operator<<(ostream & os, TPolinom & pl)
 {

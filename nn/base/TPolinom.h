@@ -57,16 +57,16 @@ public:
 	bool Operand(char op);
 	bool XYZ(char op);
 	bool IsOperation(char elem);
-	float Coef(char elem);
-	void Space(string str);
 	int DegreePr(char elem);
 	bool Proverka(string str);
 	TPolinom operator+(TPolinom & pl);
 	TPolinom operator-(TPolinom & pl);
 	TPolinom &operator=(const TPolinom & pl);
 	bool operator==(const TPolinom & pl)const;
+	bool operator!=(const TPolinom & pl)const;
 	friend ostream & operator<<(ostream & os, TPolinom & pl);
 	friend istream & operator>>(istream &is, TPolinom &pl);
+	int GetDegree(char p);
 
 };
 

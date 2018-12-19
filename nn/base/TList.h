@@ -79,6 +79,7 @@ public:
 			this->pointer = this->pointer->pNext;
 			return *this;
 		}
+		iterator& operator++(int) { iterator itr = *this; pointer = pointer->pNext; return itr; }
 		friend class TList;
 	};
 	TList(){
@@ -163,8 +164,6 @@ public:
 
 	T Pop()
 	{
-		if (!Empty())
-			throw "ERROR";
 		T d = pFirst->data;
 		link<T> *p = pFirst;
 		pFirst = pFirst->pNext;
@@ -186,7 +185,11 @@ public:
 		{
 			if (ListLen == MAXSIZE)
 				throw "Error! Maxsize.";
-			pCurrLink->pNext = new link<T>;
+			link<T> *tmp = new link<T>(d);
+			link<T> *tmp2;
+			tmp2 = pCurrLink->pNext;
+			pCurrLink->pNext = tmp;
+			tmp->pNext = tmp2;
 			pCurrLink = pCurrLink->pNext;
 			ListLen++;
 		}

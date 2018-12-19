@@ -81,7 +81,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="sample_queue.cpp" />
+    <ClCompile Include="sample_polinom.cpp" />
     <ClCompile Include="TPolinom.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -15,10 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="sample_queue.cpp">
+    <ClCompile Include="TPolinom.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TPolinom.cpp">
+    <ClCompile Include="sample_polinom.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
